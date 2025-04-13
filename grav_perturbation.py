@@ -3,10 +3,17 @@ import orb_mech_constants
 import sys
 
 x,y,z = sympy.symbols('x y z') # Cartesian coordinates
-r,phi = sympy.symbols('r phi')
+r,phi,theta_geo = sympy.symbols('r phi theta')
 
-expr_phi = sympy.atan2(x**2 + y**2, z)
-expr_r = sympy.sqrt(x**2 + y**2 + z**2)
+phi_as_xyz = sympy.atan2(x**2 + y**2, z)
+r_as_xyz = sympy.sqrt(x**2 + y**2 + z**2)
+
+z_as_rphi = r*sympy.cos(phi)
+x_as_rphi = r*sympy.sin(phi)*sympy.cos(theta_geo)
+y_as_rphi = r*sympy.sin(phi)*sympy.sin(theta_geo)
+
+cos_phi_as_rz = z/r
+sin_phi_as_rz = sympy.sqrt(1 - cos_phi_as_rz**2)
 
 def kth_grav_zonal_harmonic(k):
     """
@@ -85,24 +92,43 @@ def pert_force_expr(zonal_expr):
     pdiff_zonal_r = sympy.diff(zonal_expr, r)
     pdiff_zonal_phi = sympy.diff(zonal_expr, phi)
 
-    pert_force = -(sympy.Matrix([
-        (pdiff_zonal_r * pdiff_r_x + pdiff_zonal_phi * pdiff_phi_x).factor(),
-        (pdiff_zonal_r * pdiff_r_y + pdiff_zonal_phi * pdiff_phi_y).factor(),
-        (pdiff_zonal_r * pdiff_r_z + pdiff_zonal_phi * pdiff_phi_z).factor()
-    ]))
+    
+    px = -(pdiff_zonal_r * pdiff_r_x + pdiff_zonal_phi * pdiff_phi_x)
+    py = -(pdiff_zonal_r * pdiff_r_y + pdiff_zonal_phi * pdiff_phi_y)
+    pz = -(pdiff_zonal_r * pdiff_r_z + pdiff_zonal_phi * pdiff_phi_z)
 
-    sympy.pprint(pdiff_r_x)
-    sympy.pprint(pdiff_r_y)
-    sympy.pprint(pdiff_r_z)
-    sympy.pprint(pdiff_phi_x)
-    sympy.pprint(pdiff_phi_y)
-    sympy.pprint(pdiff_phi_z)
-    sympy.pprint(pdiff_zonal_r)
-    sympy.pprint(pdiff_zonal_phi)
+    px = px\
+        .subs(sympy.cos(phi),cos_phi_as_rz)\
+        .subs(sympy.sin(phi),sin_phi_as_rz)\
+        .simplify()
+    
+    py = py\
+        .subs(sympy.cos(phi), cos_phi_as_rz)\
+        .subs(sympy.sin(phi), sin_phi_as_rz)\
+        .simplify()
 
-    return pert_force
+    pz = pz\
+        .subs(sympy.cos(phi), cos_phi_as_rz)\
+        .subs(sympy.sin(phi), sin_phi_as_rz)\
+        .simplify()
+    
+    # sympy.pprint(pdiff_r_x)
+    # sympy.pprint(pdiff_r_y)
+    # sympy.pprint(pdiff_r_z)
+    # sympy.pprint(pdiff_phi_x)
+    # sympy.pprint(pdiff_phi_y)
+    # sympy.pprint(pdiff_phi_z)
+    # sympy.pprint(pdiff_zonal_r)
+    # sympy.pprint(pdiff_zonal_phi)
+
+    # sympy.pprint(px)
+    # sympy.pprint(py)
+    # sympy.pprint(pz)
+
+    return px,py,pz
 
 if __name__ == "__main__":
     sympy.init_printing()
 
-    sympy.pprint(pert_force_expr(evaluate_kth_zonal_harmonic(3)))
+    for i in range(7):
+        sympy.pprint(pert_force_expr(evaluate_kth_zonal_harmonic(i)))
