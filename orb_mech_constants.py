@@ -1,0 +1,10 @@
+# Gravitational Parameters
+MU_EARTH = 398600.4418  # km^3/s^2
+MU_MOON = 4902.800066  # km^3/s^2
+MU_SUN = 1.32712440018e20  # km^3/s^2
+MU_MARS = 42828.3  # km^3/s^2
+
+
+LUNAR_ORBITAL_RADIUS = 384400  # km
+LUNAR_AVG_ORBITAL_VELOCITY = 1.0183  # km/s
+LUNAR_SOI_RADIUS = LUNAR_ORBITAL_RADIUS * (MU_EARTH / MU_MOON) ** (2 / 5)  # km, expect value of ~58,000 km
