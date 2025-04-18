@@ -23,16 +23,17 @@ LRG = sp.Inverse(GRL)
 
 r_ECI = GRL * sp.Matrix([[r],[0],[0]])
 
-sp.pprint(r_ECI)
 
 X_ECI,Y_ECI,Z_ECI = r_ECI
 
 p_ECI = sp.trigsimp(p_ECI.subs(X,X_ECI).subs(Y,Y_ECI).subs(Z,Z_ECI))
 
-sp.pprint(p_ECI)
 
 p_LVLH = LRG * p_ECI
 p_LVLH = sp.trigsimp(sp.simplify(p_LVLH))
 
-sp.pprint(p_LVLH)
-sp.pprint(p_LVLH[0])
+if __name__ == "__main__":
+    sp.pprint(r_ECI)
+    sp.pprint(p_ECI)
+    sp.pprint(p_LVLH)
+    sp.pprint(p_LVLH[0])
