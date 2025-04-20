@@ -1,5 +1,5 @@
 # Gravitational Parameters
-MU_SUN = 1.3271244001e20  # km^3/s^2
+MU_SUN = 1.3271244001e11  # km^3/s^2
 MU_MERCURY = 22032.0  # km^3/s^2
 MU_VENUS = 324858.59  # km^3/s^2
 MU_EARTH = 398600.442  # km^3/s^2

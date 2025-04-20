@@ -2,3 +2,5 @@ sympy
 matplotlib
 numpy
 scipy
+lamberthub
+astropy
