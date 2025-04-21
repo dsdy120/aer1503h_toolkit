@@ -21,7 +21,7 @@ def planetary_position_velocity(iso_date:str, body:str):
     pos_vel = astropy.coordinates.get_body_barycentric_posvel(body,obs_time)
     pos = np.array([pos_vel[0].x.value, pos_vel[0].y.value, pos_vel[0].z.value])*orb_mech_constants.AU
     vel = np.array([pos_vel[1].x.value, pos_vel[1].y.value, pos_vel[1].z.value])*orb_mech_constants.AU/86400.0
-    print(f"Position of {body:7s} at {iso_date} (JD: {obs_time.jd1} {obs_time.jd2: 5.1f}): {pos}, {vel}")
+    print(f"Position of {body:7s} at {iso_date} (JD: {obs_time.jd1 + obs_time.jd2: 5.1f}): {pos}, {vel}")
 
     return pos, vel
 
@@ -47,18 +47,18 @@ def lambert_interplanetary(start_date, end_date, body1, body2):
 
 if __name__ == "__main__":
     # Example usage
-    start_date = datetime.datetime(2005, 12, 1).isoformat()
-    end_date = datetime.datetime(2006, 4, 1).isoformat()
+    start_date = datetime.datetime(2005, 8, 15).isoformat()
+    end_date = datetime.datetime(2006, 3, 15).isoformat()
     body1 = "Earth"
-    body2 = "Venus"
+    body2 = "Mars"
 
     dep_pos, dep_vel, arr_pos, arr_vel, body1_vel, body2_vel = lambert_interplanetary(start_date, end_date, body1, body2)
 
     print("Departure Position:", dep_pos)
-    print("Departure Velocity:", dep_vel)
-    print("Arrival Position:", arr_pos)
-    print("Arrival Velocity:", arr_vel)
     print("Body 1 Velocity:", body1_vel)
+    print("Arrival Position:", arr_pos)
     print("Body 2 Velocity:", body2_vel)
+    print("Departure Velocity:", dep_vel)
+    print("Arrival Velocity:", arr_vel)
     print("Departure V_inf:", np.linalg.norm(dep_vel - body1_vel))
     print("Arrival V_inf:", np.linalg.norm(arr_vel - body2_vel))
